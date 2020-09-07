@@ -7,7 +7,7 @@ stages:
 
 jobs:
   includes:
-    - name: Eslint
+  - name: Eslint
     stage: lint
     install: npm install
     script: npm run build
