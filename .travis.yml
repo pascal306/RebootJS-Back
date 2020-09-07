@@ -6,8 +6,22 @@ stages:
   - lint
 
 jobs:
-  includes:
-  - name: Eslint
-    stage: lint
+  include:
+  - stage: Transpile
+    name: transpile
     install: npm install
     script: npm run build
+
+  - stage: global testing
+    name: compile
+    install: npm install
+    script: npm build
+
+  - stage: global testing
+    name: tests
+    install: npm install
+    script: npm test
+    
+  - stage: deployement
+    name: skip the heroku TODO
+    script: skip

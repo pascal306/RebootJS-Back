@@ -5,7 +5,9 @@ import { configuration, IConfig } from "./config";
 import { Profile } from './models/profiles';
 import boydyparser from "body-parser";
 import { connect } from './database';
-
+import profileRoute from './routes/profileRoute';
+import loginRoute from './routes/loginRoute';
+import {authenticationInitialize} from './controller/authentification'
 export function createExpressApp(config: IConfig): express.Express {
   const { express_debug } = config;
 
@@ -14,15 +16,19 @@ export function createExpressApp(config: IConfig): express.Express {
   app.use(morgan('combined'));
   app.use(helmet());
   app.use(express.json());
+  app.use(authenticationInitialize());
 
   app.use(((err, _req, res, _next) => {
     console.error(err.stack);
     res.status?.(500).send(!express_debug ? 'Oups' : err);
   }) as ErrorRequestHandler);
 
+  app.use('/profiles', profileRoute);
+  app.use("/login", loginRoute);
+  
   app.get('/', (req: Request, res: Response) => { res.send('This is the boilerplate for Flint Messenger app') });
 
-  app.post('/profile',(req:Request,res:Response) => {
+  /*app.post('/profile',(req:Request,res:Response) => {
     const { email,firstname, lastname } = req.body;
 
     const newProfile = new Profile({email:email, firstname: firstname,lastname:lastname
@@ -32,7 +38,9 @@ export function createExpressApp(config: IConfig): express.Express {
     });
     newProfile.save();
     res.send('Utilisatreur créé');
-  });
+  });*/
+
+
 
   return app;
 }
